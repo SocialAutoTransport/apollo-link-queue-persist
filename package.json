@@ -1,0 +1,99 @@
+{
+    "name": "apollo-link-queue-persist",
+    "version": "0.9.1",
+    "description": "Simple persistence for Apollo link queue instances",
+    "author": "Rob Newton <robbienewton@gmail.com>",
+    "contributors": [
+      "Rob Newton <robbienewton@gmail.com>"
+    ],
+    "license": "MIT",
+    "main": "./lib/cjs/index.js",
+    "module": "./lib/index.js",
+    "jsnext:main": "./lib/index.js",
+    "typings": "./lib/index.d.ts",
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/SocialAutoTransport/apollo-link-queue-persist.git"
+    },
+    "homepage": "https://github.com/SocialAutoTransport/apollo-link-queue-persist.git#readme",
+    "bugs": "https://github.com/SocialAutoTransport/apollo-link-queue-persist.git/issues",
+    "scripts": {
+      "build:browser": "browserify ./lib/bundle.umd.js -o=./lib/bundle.js && npm run minify:browser",
+      "build": "tsc -p . && tsc -p ./tsconfig.cjs.json",
+      "bundle": "rollup -c",
+      "clean": "rimraf lib/* && rimraf coverage/*",
+      "coverage:upload": "codecov",
+      "danger": "danger run --verbose",
+      "deploy": "./scripts/deploy.sh",
+      "filesize": "npm run build && npm run build:browser && bundlesize",
+      "minify:browser": "uglifyjs -c -m -o ./lib/bundle.min.js -- ./lib/bundle.js",
+      "postbuild": "npm run bundle",
+      "prebuild": "npm run clean",
+      "precommit": "lint-staged",
+      "test": "jest",
+      "test:watch": "jest --watchAll --onlyChanged",
+      "coverage": "jest --coverage",
+      "watch": "tsc -w -p ."
+    },
+    "bundlesize": [
+      {
+        "path": "./lib/bundle.min.js",
+        "threshold": "3 Kb"
+      }
+    ],
+    "lint-staged": {
+      "*.{md,ts,js,json}": [
+        "prettier --write es5",
+        "git add"
+      ]
+    },
+    "jest": {
+      "moduleFileExtensions": [
+        "ts",
+        "js",
+        "json"
+      ],
+      "transform": {
+        "\\.ts$": "ts-jest"
+      },
+      "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|js)$",
+      "globals": {
+        "ts-jest": {
+          "useBabelrc": true
+        }
+      },
+      "transformIgnorePatterns": [
+        "node_modules/(?!apollo-cache-hermes)"
+      ]
+    },
+    "dependencies": {
+      
+    },
+    "peerDependencies": {
+      "@apollo/client": "^3.2.5",
+      "@SocialAutoTransport/apollo-link-queue": "^3.0.0",
+    },
+    "devDependencies": {
+      "@apollo/client": "3.2.4",
+      "@SocialAutoTransport/apollo-link-queue": "^3.0.0",
+      "@types/jest": "24.9.1",
+      "@types/node": "12.11.5",
+      "@types/react-native": "0.63.37",
+      "apollo-cache-hermes": "0.8.14",
+      "browserify": "16.5.0",
+      "bundlesize": "0.18.0",
+      "codecov": "3.8.0",
+      "danger": "7.1.4",
+      "graphql": "15.4.0",
+      "husky": "4.3.0",
+      "jest": "24.9.0",
+      "lint-staged": "9.5.0",
+      "prettier": "1.18.2",
+      "react": "16.13.1",
+      "rimraf": "3.0.0",
+      "rollup": "1.25.2",
+      "ts-jest": "23.0.0",
+      "typescript": "4.0.3",
+      "uglify-js": "3.6.3"
+    }
+  }
