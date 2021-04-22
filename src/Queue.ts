@@ -3,14 +3,14 @@ import { QueueLink, OperationQueueEntry } from '@SocialAutoTransport/apollo-link
 import { ApolloPersistOptions, PersistedData } from './types';
 
 export default class Queue<T> {
-  queue: QueueLink<T>;
+  queueLink: QueueLink<T>;
   serialize: boolean;
   client: ApolloLink;
 
   constructor(options: ApolloPersistOptions<T>) {
-    const { queue, serialize = true, client } = options;
+    const { queueLink, serialize = true, client } = options;
 
-    this.queue = queue;
+    this.queueLink = queueLink;
     this.serialize = serialize;
     this.client = client;
   }
@@ -19,12 +19,12 @@ export default class Queue<T> {
       let data: PersistedData<T> = '';
 
       // Convert each Operation to a GraphQLRequest so we aren't persisting functions
-      const entries = this.queue.getQueue().map((entry: OperationQueueEntry): GraphQLRequest => ({
-          query: entry.operation.query,
-          variables: entry.operation.variables,
-          operationName: entry.operation.operationName,
-          context: entry.operation.getContext(),
-          extensions: entry.operation.extensions,
+      const entries = this.queueLink.getQueue().map((entry: OperationQueueEntry): GraphQLRequest => ({
+        query: entry.operation.query,
+        variables: entry.operation.variables,
+        operationName: entry.operation.operationName,
+        context: entry.operation.getContext(),
+        extensions: entry.operation.extensions,
       }));
 
       if (this.serialize) {
@@ -46,8 +46,8 @@ export default class Queue<T> {
     if (parsedData != null) {
       for (const graphqlRequest in parsedData) {
         const { query, variables, context } = graphqlRequest as GraphQLRequest;
-        if (this.queue.isType(query, 'mutation')) {
-            this.client.mutate({mutation: query, variables, context});
+        if (this.queueLink.isType(query, 'mutation')) {
+          this.client.mutate({mutation: query, variables, context});
         } else {
           this.client.query({query, variables, context});
         }

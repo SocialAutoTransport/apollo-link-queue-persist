@@ -31,6 +31,16 @@ export default class QueuePersistor<T> {
     this.queue = queue;
     this.storage = storage;
     this.persistor = persistor;
+
+    this.queue.queueLink.addLinkQueueEventListener("mutation", "enqueue", (item: any) => {
+      console.log('QueuePersistor: mutation enqueued', item);
+      this.persistor.persist();
+    });
+
+    this.queue.queueLink.addLinkQueueEventListener("mutation", "dequeue", (item: any) => {
+      console.log('QueuePersistor: mutation dequeued', item);
+      this.persistor.persist();
+    });
   }
 
   /**

@@ -18,7 +18,7 @@ export interface PersistentStorage<T> {
 }
 
 export interface ApolloPersistOptions<TSerialized> {
-  queue: QueueLink<TSerialized>;
+  queueLink: QueueLink<TSerialized>;
   storage: PersistentStorage<PersistedData<TSerialized>>;
   trigger?: 'write' | 'background' | TriggerFunction | false;
   debounce?: number;
