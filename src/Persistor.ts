@@ -30,8 +30,11 @@ export default class Persistor<T> {
   }
 
   async persist(): Promise<void> {
+    console.log('Persistor.persist() start')
     try {
       const data = this.queue.extract();
+
+      console.log('Persistor.persist() queue.extract() result: ', data)
 
       if (
         this.maxSize != null &&
@@ -48,8 +51,11 @@ export default class Persistor<T> {
         return;
       }
 
+      console.log('Persistor.persist() made it to storage.write(data)')
+
       await this.storage.write(data);
     } catch (error) {
+      console.error('Persistor.persist() unexpected error: ', error.message, error.stack, error)
       throw error;
     }
   }

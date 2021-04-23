@@ -20,6 +20,8 @@ import {
     }
   
     async write(data: PersistedData<T>): Promise<void> {
+      console.log('Storage.write() called with data.', data);
+      console.log('Storage.write() About to call storage.setItem(this.key, data) ', this.key, data);
       await this.storage.setItem(this.key, data);
     }
   

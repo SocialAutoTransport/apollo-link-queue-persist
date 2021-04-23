@@ -14,16 +14,19 @@
             this.client = client;
         }
         Queue.prototype.extract = function () {
+            console.log('Queue.extract() start');
             var data = '';
             var entries = this.queueLink.getQueue().map(function (entry) { return ({
                 query: entry.operation.query,
                 variables: entry.operation.variables,
                 operationName: entry.operation.operationName,
-                context: entry.operation.getContext(),
+                context: {},
                 extensions: entry.operation.extensions,
             }); });
+            console.log('Queue.extract() entries:', entries);
             if (this.serialize) {
                 data = JSON.stringify(entries);
+                console.log('Queue.extract() serialize:', data);
             }
             return data;
         };
@@ -33,8 +36,11 @@
                 parsedData = JSON.parse(data);
             }
             if (parsedData != null) {
+                console.log('Queue.restore() parsedData: ', parsedData);
                 for (var graphqlRequest in parsedData) {
+                    console.log('Queue.restore() foreach parsedData.graphqlRequest: ', graphqlRequest);
                     var _a = graphqlRequest, query = _a.query, variables = _a.variables, context = _a.context;
+                    console.log('Queue.restore() graphqlRequest destructured: ', query, variables, context);
                     if (this.queueLink.isType(query, 'mutation')) {
                         this.client.mutate({ mutation: query, variables: variables, context: context });
                     }
@@ -100,7 +106,10 @@
             return __awaiter(this, void 0, void 0, function () {
                 return __generator(this, function (_a) {
                     switch (_a.label) {
-                        case 0: return [4, this.storage.setItem(this.key, data)];
+                        case 0:
+                            console.log('Storage.write() called with data.', data);
+                            console.log('Storage.write() About to call storage.setItem(this.key, data) ', this.key, data);
+                            return [4, this.storage.setItem(this.key, data)];
                         case 1:
                             _a.sent();
                             return [2];
@@ -194,29 +203,35 @@
                 return __generator$1(this, function (_a) {
                     switch (_a.label) {
                         case 0:
-                            _a.trys.push([0, 4, , 5]);
+                            console.log('Persistor.persist() start');
+                            _a.label = 1;
+                        case 1:
+                            _a.trys.push([1, 5, , 6]);
                             data = this.queue.extract();
+                            console.log('Persistor.persist() queue.extract() result: ', data);
                             if (!(this.maxSize != null &&
                                 typeof data === 'string' &&
                                 data.length > this.maxSize &&
-                                !this.paused)) return [3, 2];
+                                !this.paused)) return [3, 3];
                             return [4, this.purge()];
-                        case 1:
+                        case 2:
                             _a.sent();
                             this.paused = true;
                             return [2];
-                        case 2:
+                        case 3:
                             if (this.paused) {
                                 return [2];
                             }
+                            console.log('Persistor.persist() made it to storage.write(data)');
                             return [4, this.storage.write(data)];
-                        case 3:
-                            _a.sent();
-                            return [3, 5];
                         case 4:
+                            _a.sent();
+                            return [3, 6];
+                        case 5:
                             error_1 = _a.sent();
+                            console.error('Persistor.persist() unexpected error: ', error_1.message, error_1.stack, error_1);
                             throw error_1;
-                        case 5: return [2];
+                        case 6: return [2];
                     }
                 });
             });
@@ -284,11 +299,11 @@
             this.queue = queue;
             this.storage = storage;
             this.persistor = persistor;
-            QueueLink.addLinkQueueEventListener("mutation", "enqueue", function (item) {
+            QueueLink.addLinkQueueEventListener("create_driveraction", "enqueue", function (item) {
                 console.log('QueuePersistor: mutation enqueued', item);
                 _this.persistor.persist();
             });
-            QueueLink.addLinkQueueEventListener("mutation", "dequeue", function (item) {
+            QueueLink.addLinkQueueEventListener("create_driveraction", "dequeue", function (item) {
                 console.log('QueuePersistor: mutation dequeued', item);
                 _this.persistor.persist();
             });
