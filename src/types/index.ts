@@ -1,4 +1,4 @@
-import { ApolloLink } from '@apollo/client/link/core';
+import { ApolloClient } from 'apollo-client';
 import { QueueLink } from '@SocialAutoTransport/apollo-link-queue';
 
 export type LogLevel = 'log' | 'warn' | 'error';
@@ -26,5 +26,5 @@ export interface ApolloPersistOptions<TSerialized> {
   serialize?: boolean;
   maxSize?: number | false;
   debug?: boolean;
-  client: ApolloLink;
+  client: ApolloClient;
 }

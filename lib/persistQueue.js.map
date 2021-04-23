@@ -1,1 +1,0 @@
-{"version":3,"file":"persistQueue.js","sourceRoot":"","sources":["../src/persistQueue.ts"],"names":[],"mappings":"AAAA,OAAO,cAAc,MAAM,kBAAkB,CAAC;AAG9C,gBAAe,UAAI,OAAgC;IACjD,IAAM,SAAS,GAAG,IAAI,cAAc,CAAC,OAAO,CAAC,CAAC;IAC9C,OAAO,SAAS,CAAC,OAAO,EAAE,CAAC;AAC7B,CAAC,EAAC"}
