@@ -1,12 +1,12 @@
 import { GraphQLRequest } from '@apollo/client/link/core';
-import { ApolloClient } from 'apollo-client';
-import { QueueLink, OperationQueueEntry } from '@SocialAutoTransport/apollo-link-queue';
+import { ApolloClient, InMemoryCache } from '@apollo/client';
+import QueueLink, { OperationQueueEntry } from '@SocialAutoTransport/apollo-link-queue';
 import { ApolloPersistOptions, PersistedData } from './types';
 
 export default class Queue<T> {
-  queueLink: QueueLink<T>;
+  queueLink: QueueLink;
   serialize: boolean;
-  client: ApolloClient;
+  client: ApolloClient<InMemoryCache>;
 
   constructor(options: ApolloPersistOptions<T>) {
     const { queueLink, serialize = true, client } = options;
@@ -46,7 +46,7 @@ export default class Queue<T> {
 
     if (parsedData != null) {
       for (const graphqlRequest in parsedData) {
-        const { query, variables, context } = graphqlRequest as GraphQLRequest;
+        const { query, variables, context } = (graphqlRequest as unknown) as GraphQLRequest;
         if (this.queueLink.isType(query, 'mutation')) {
           this.client.mutate({mutation: query, variables, context});
         } else {

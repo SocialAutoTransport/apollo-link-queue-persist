@@ -1,7 +1,7 @@
-import { ApolloClient } from 'apollo-client';
-import { QueueLink } from '@SocialAutoTransport/apollo-link-queue';
+import { ApolloClient, InMemoryCache } from "@apollo/client";
+import QueueLink from "@SocialAutoTransport/apollo-link-queue";
 
-export type LogLevel = 'log' | 'warn' | 'error';
+export type LogLevel = "log" | "warn" | "error";
 
 export type LogLine = [LogLevel, any[]];
 
@@ -18,13 +18,13 @@ export interface PersistentStorage<T> {
 }
 
 export interface ApolloPersistOptions<TSerialized> {
-  queueLink: QueueLink<TSerialized>;
+  queueLink: QueueLink;
   storage: PersistentStorage<PersistedData<TSerialized>>;
-  trigger?: 'write' | 'background' | TriggerFunction | false;
+  trigger?: "write" | "background" | TriggerFunction | false;
   debounce?: number;
   key?: string;
   serialize?: boolean;
   maxSize?: number | false;
   debug?: boolean;
-  client: ApolloClient;
+  client: ApolloClient<InMemoryCache>;
 }

@@ -1,0 +1,51 @@
+{
+  "name": "@SocialAutoTransport/apollo-link-queue-persist",
+  "version": "0.0.2",
+  "description": "Simple persistence for Apollo link queue instances",
+  "author": "Rob Newton <robbienewton@gmail.com>",
+  "contributors": [
+    "Rob Newton <robbienewton@gmail.com>"
+  ],
+  "license": "MIT",
+  "main": "bundle.umd.js",
+  "module": "index.js",
+  "jsnext:main": "index.js",
+  "typings": "index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SocialAutoTransport/apollo-link-queue-persist.git"
+  },
+  "homepage": "https://github.com/SocialAutoTransport/apollo-link-queue-persist.git#readme",
+  "bugs": "https://github.com/SocialAutoTransport/apollo-link-queue-persist.git/issues",
+  "publishConfig": {
+    "cache": "~/.npm",
+    "registry": "https://npm.pkg.github.com/SocialAutoTransport"
+  },
+  "dependencies": {
+    "@SocialAutoTransport/apollo-link-queue": "^3.2.4"
+  },
+  "peerDependencies": {
+    "@apollo/client": "^3.2.5"
+  },
+  "devDependencies": {
+    "@types/jest": "24.9.1",
+    "@types/node": "12.11.5",
+    "@types/react-native": "0.63.37",
+    "apollo-cache-hermes": "0.8.14",
+    "browserify": "16.5.0",
+    "bundlesize": "0.18.0",
+    "codecov": "3.8.0",
+    "danger": "7.1.4",
+    "graphql": "15.4.0",
+    "husky": "4.3.0",
+    "lint-staged": "9.5.0",
+    "prettier": "1.18.2",
+    "react": "16.13.1",
+    "rimraf": "3.0.0",
+    "rollup": "1.25.2",
+    "typescript": "4.0.3",
+    "uglify-js": "3.6.3"
+  },
+  "browser": "bundle.umd.js",
+  "react-native": "index.js"
+}
