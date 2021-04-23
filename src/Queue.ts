@@ -59,7 +59,7 @@ export default class Queue<T> {
         } else {
           this.client.query({query, variables, context});
         }
-      }
+      });
     }
   }
 }
