@@ -1,11 +1,12 @@
-import { ApolloLink, GraphQLRequest } from '@apollo/client/link/core';
+import { GraphQLRequest } from '@apollo/client/link/core';
+import { ApolloClient } from 'apollo-client';
 import { QueueLink, OperationQueueEntry } from '@SocialAutoTransport/apollo-link-queue';
 import { ApolloPersistOptions, PersistedData } from './types';
 
 export default class Queue<T> {
   queueLink: QueueLink<T>;
   serialize: boolean;
-  client: ApolloLink;
+  client: ApolloClient;
 
   constructor(options: ApolloPersistOptions<T>) {
     const { queueLink, serialize = true, client } = options;
