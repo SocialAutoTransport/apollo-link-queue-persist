@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "lib",
+    "pretty": true,
+    "noImplicitAny": true,
+    "noUnusedParameters": false,
+    "noUnusedLocals": true,
+    "skipLibCheck": true,
+    "moduleResolution": "node",
+    "removeComments": true,
+    "sourceMap": true,
+    "declaration": true,
+    "target": "es5",
+    "module": "es2015",
+    "lib": ["es2015"]
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": [
+    "src/**/__tests__/*.ts",
+    "src/**/__mocks__/*.ts",
+    "dangerfile.ts",
+    "node_modules"
+  ]
+}

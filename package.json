@@ -1,6 +1,6 @@
 {
-    "name": "apollo-link-queue-persist",
-    "version": "0.9.1",
+    "name": "@SocialAutoTransport/apollo-link-queue-persist",
+    "version": "0.0.1",
     "description": "Simple persistence for Apollo link queue instances",
     "author": "Rob Newton <robbienewton@gmail.com>",
     "contributors": [
@@ -66,16 +66,20 @@
         "node_modules/(?!apollo-cache-hermes)"
       ]
     },
+    "publishConfig": {
+      "cache": "~/.npm",
+      "registry": "https://npm.pkg.github.com/SocialAutoTransport"
+    },
     "dependencies": {
       
     },
     "peerDependencies": {
       "@apollo/client": "^3.2.5",
-      "@SocialAutoTransport/apollo-link-queue": "^3.0.0",
+      "@SocialAutoTransport/apollo-link-queue": "^3.2.0"
     },
     "devDependencies": {
       "@apollo/client": "3.2.4",
-      "@SocialAutoTransport/apollo-link-queue": "^3.0.0",
+      "@SocialAutoTransport/apollo-link-queue": "^3.2.0",
       "@types/jest": "24.9.1",
       "@types/node": "12.11.5",
       "@types/react-native": "0.63.37",

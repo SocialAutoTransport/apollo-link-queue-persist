@@ -1,0 +1,16 @@
+{
+  "extends": [
+    "config:base",
+    ":pinVersions"
+  ],
+  "prCreation": "not-pending",
+  "pinVersions": true,
+  "semanticCommits": true,
+  "labels": ["tooling", "dependencies"],
+  "packageRules": [
+    {
+      "packageNames": ["graphql"],
+      "versionStrategy": "widen"
+    }
+  ]
+}

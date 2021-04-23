@@ -10,7 +10,7 @@ export default class QueuePersistor<T> {
   persistor: Persistor<T>;
 
   constructor(options: ApolloPersistOptions<T>) {
-    if (!options.queue) {
+    if (!options.queueLink) {
       throw new Error(
         'In order to persist your Apollo Link Queue, you need to pass in a link queue instance. ' +
           'Please see https://github.com/helfer/apollo-link-queue for more information.'
