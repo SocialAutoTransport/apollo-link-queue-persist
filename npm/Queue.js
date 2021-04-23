@@ -23,6 +23,7 @@ var Queue = (function () {
         return data;
     };
     Queue.prototype.restore = function (data) {
+        var _this = this;
         var parsedData = null;
         if (this.serialize && typeof data === 'string') {
             parsedData = JSON.parse(data);
@@ -31,17 +32,17 @@ var Queue = (function () {
         }
         if (parsedData != null) {
             console.log('Queue.restore() parsedData: ', parsedData);
-            for (var graphqlRequest in parsedData) {
+            parsedData.map(function (graphqlRequest) {
                 console.log('Queue.restore() foreach parsedData.graphqlRequest: ', graphqlRequest);
                 var _a = graphqlRequest, query = _a.query, variables = _a.variables, context = _a.context;
                 console.log('Queue.restore() graphqlRequest destructured: ', query, variables, context);
-                if (this.queueLink.isType(query, 'mutation')) {
-                    this.client.mutate({ mutation: query, variables: variables, context: context });
+                if (_this.queueLink.isType(query, 'mutation')) {
+                    _this.client.mutate({ mutation: query, variables: variables, context: context });
                 }
                 else {
-                    this.client.query({ query: query, variables: variables, context: context });
+                    _this.client.query({ query: query, variables: variables, context: context });
                 }
-            }
+            });
         }
     };
     return Queue;

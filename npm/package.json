@@ -1,6 +1,6 @@
 {
   "name": "@SocialAutoTransport/apollo-link-queue-persist",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Simple persistence for Apollo link queue instances",
   "author": "Rob Newton <robbienewton@gmail.com>",
   "contributors": [
