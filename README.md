@@ -30,7 +30,6 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-// await before instantiating ApolloClient, else queries might run before the cache is persisted
 await persistQueue({
   queueLink,
   storage: AsyncStorage,
