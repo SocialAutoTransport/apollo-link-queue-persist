@@ -21,8 +21,14 @@ By default, the contents of your Apollo link queue will be immediately restored
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { persistQueue, AsyncStorageWrapper } from 'apollo-link-queue-persist';
 import QueueLink from 'apollo-link-queue';
+import {ApolloClient, InMemoryCache, ApolloProvider, HttpLink, ApolloLink} from '@apollo/client';
 
 const queueLink = new QueueLink();
+
+const client = new ApolloClient({
+  link: ApolloLink.from([queueLink, httpLink]);,
+  cache: new InMemoryCache(),
+});
 
 // await before instantiating ApolloClient, else queries might run before the cache is persisted
 await persistQueue({
