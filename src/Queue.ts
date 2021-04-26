@@ -17,7 +17,6 @@ export default class Queue<T> {
   }
   
   extract(): PersistedData<T> {
-      console.log('Queue.extract() start');
       let data: PersistedData<T> = '';
 
       // Convert each Operation to a GraphQLRequest so we aren't persisting functions
@@ -29,11 +28,8 @@ export default class Queue<T> {
         extensions: entry.operation.extensions,
       }));
 
-      console.log('Queue.extract() entries:', entries);
-
       if (this.serialize) {
         data = JSON.stringify(entries) as string;
-        console.log('Queue.extract() serialize:', data);
       }
 
       return data;
@@ -49,11 +45,8 @@ export default class Queue<T> {
     }
 
     if (parsedData != null) {
-      console.log('Queue.restore() parsedData: ', parsedData);
       parsedData.map(graphqlRequest => {
-        console.log('Queue.restore() foreach parsedData.graphqlRequest: ', graphqlRequest);
         const { query, variables, context } = (graphqlRequest as unknown) as GraphQLRequest;
-        console.log('Queue.restore() graphqlRequest destructured: ', query, variables, context);
         if (this.queueLink.isType(query, 'mutation')) {
           this.client.mutate({mutation: query, variables, context});
         } else {

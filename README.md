@@ -1,10 +1,11 @@
-# apollo3-link-queue-persist
+# apollo-link-queue-persist
 
-Simple persistence for any queued Apollo queries when using [`apollo-link-queue`][0].
+Simple persistence for any queued Apollo queries when using [`helfer/apollo-link-queue`][0]. At initial build time, @helfer has not yet pulled in the changes required in `apollo-link-queue` so in order for this to work, you'll need to make use of our fork at [`@SocialAutoTransport/apollo-link-queue`][1]
 
 Supports web and React Native. [See all storage providers.](#storage-providers)
 
 [0]: https://github.com/helfer/apollo-link-queue
+[1]: https://github.com/SocialAutoTransport/apollo-link-queue
 
 ## Basic Usage
 
@@ -25,8 +26,9 @@ const queueLink = new QueueLink();
 
 // await before instantiating ApolloClient, else queries might run before the cache is persisted
 await persistQueue({
-  queue: queueLink,
-  storage: new AsyncStorageWrapper(AsyncStorage),
+  queueLink,
+  storage: AsyncStorage,
+  client,
 });
 ```
 
@@ -52,7 +54,7 @@ use a different storage provider, such as
 
 ### Using other storage providers
 
-`apollo3-cache-persist` supports stable versions of storage providers mentioned above. 
+`apollo-link-queue-persist` supports stable versions of storage providers mentioned above. 
 If you want to use other storage provider, or there's a breaking change in `next` version of supported provider,
 you can create your own wrapper. For an example of a simple wrapper have a look at [`AsyncStorageWrapper`](./src/storageWrappers/AsyncStorageWrapper.ts). 
 

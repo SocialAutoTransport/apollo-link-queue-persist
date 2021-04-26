@@ -1,11 +1,13 @@
+import Log from './Log';
 import Queue from './Queue';
 import Storage from './Storage';
 import Persistor from './Persistor';
 import QueueLink from '@SocialAutoTransport/apollo-link-queue';
 
-import { ApolloPersistOptions } from './types';
+import { ApolloPersistOptions, LogLine } from './types';
 
 export default class QueuePersistor<T> {
+  log: Log<T>;
   queue: Queue<T>;
   storage: Storage<T>;
   persistor: Persistor<T>;
@@ -25,21 +27,23 @@ export default class QueuePersistor<T> {
       );
     }
 
+    const log = new Log(options);
     const queue = new Queue(options);
     const storage = new Storage(options);
-    const persistor = new Persistor({ queue, storage }, options);
+    const persistor = new Persistor({ log, queue, storage }, options);
 
+    this.log = log;
     this.queue = queue;
     this.storage = storage;
     this.persistor = persistor;
 
     QueueLink.addLinkQueueEventListener("any", "enqueue", (item: any) => {
-      console.log('QueuePersistor: mutation enqueued', item);
+      this.log.info('QueueLink listener (any, enqueued) fired', item);
       this.persistor.persist();
     });
 
     QueueLink.addLinkQueueEventListener("any", "dequeue", (item: any) => {
-      console.log('QueuePersistor: mutation dequeued', item);
+      this.log.info('QueueLink listener (any, dequeue) fired', item);
       this.persistor.persist();
     });
   }
@@ -58,5 +62,21 @@ export default class QueuePersistor<T> {
 
   purge(): Promise<void> {
     return this.persistor.purge();
+  }
+
+  /**
+   * Info accessor.
+   */
+
+  getLogs(print = false): Array<LogLine> | void {
+    if (print) {
+      this.log.tailLogs();
+    } else {
+      return this.log.getLogs();
+    }
+  }
+
+  getSize(): Promise<number | null> {
+    return this.storage.getSize();
   }
 }

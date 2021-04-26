@@ -38,8 +38,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var Persistor = (function () {
     function Persistor(_a, options) {
-        var queue = _a.queue, storage = _a.storage;
+        var log = _a.log, queue = _a.queue, storage = _a.storage;
         var _b = options.maxSize, maxSize = _b === void 0 ? 1024 * 1024 : _b;
+        this.log = log;
         this.queue = queue;
         this.storage = storage;
         this.paused = false;
@@ -53,35 +54,33 @@ var Persistor = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        console.log('Persistor.persist() start');
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 5, , 6]);
+                        _a.trys.push([0, 4, , 5]);
                         data = this.queue.extract();
-                        console.log('Persistor.persist() queue.extract() result: ', data);
                         if (!(this.maxSize != null &&
                             typeof data === 'string' &&
                             data.length > this.maxSize &&
-                            !this.paused)) return [3, 3];
+                            !this.paused)) return [3, 2];
                         return [4, this.purge()];
-                    case 2:
+                    case 1:
                         _a.sent();
                         this.paused = true;
                         return [2];
-                    case 3:
+                    case 2:
                         if (this.paused) {
                             return [2];
                         }
-                        console.log('Persistor.persist() made it to storage.write(data)');
                         return [4, this.storage.write(data)];
-                    case 4:
+                    case 3:
                         _a.sent();
-                        return [3, 6];
-                    case 5:
+                        this.log.info(typeof data === 'string'
+                            ? "Persisted queue of size " + data.length + " characters"
+                            : 'Persisted queue');
+                        return [3, 5];
+                    case 4:
                         error_1 = _a.sent();
-                        console.error('Persistor.persist() unexpected error: ', error_1.message, error_1.stack, error_1);
+                        this.log.error('Error persisting queue', error_1);
                         throw error_1;
-                    case 6: return [2];
+                    case 5: return [2];
                 }
             });
         });
@@ -92,7 +91,7 @@ var Persistor = (function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        _a.trys.push([0, 4, , 5]);
+                        _a.trys.push([0, 5, , 6]);
                         return [4, this.storage.read()];
                     case 1:
                         data = _a.sent();
@@ -100,12 +99,19 @@ var Persistor = (function () {
                         return [4, this.queue.restore(data)];
                     case 2:
                         _a.sent();
-                        _a.label = 3;
-                    case 3: return [3, 5];
-                    case 4:
+                        this.log.info(typeof data === 'string'
+                            ? "Restored queue of size " + data.length + " characters"
+                            : 'Restored queue');
+                        return [3, 4];
+                    case 3:
+                        this.log.info('No stored queue to restore');
+                        _a.label = 4;
+                    case 4: return [3, 6];
+                    case 5:
                         error_2 = _a.sent();
+                        this.log.error('Error restoring queue', error_2);
                         throw error_2;
-                    case 5: return [2];
+                    case 6: return [2];
                 }
             });
         });
@@ -120,9 +126,11 @@ var Persistor = (function () {
                         return [4, this.storage.purge()];
                     case 1:
                         _a.sent();
+                        this.log.info('Purged queue storage');
                         return [3, 3];
                     case 2:
                         error_3 = _a.sent();
+                        this.log.error('Error purging queue storage', error_3);
                         throw error_3;
                     case 3: return [2];
                 }

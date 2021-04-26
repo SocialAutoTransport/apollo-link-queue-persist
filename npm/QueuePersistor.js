@@ -1,3 +1,4 @@
+import Log from './Log';
 import Queue from './Queue';
 import Storage from './Storage';
 import Persistor from './Persistor';
@@ -13,18 +14,20 @@ var QueuePersistor = (function () {
             throw new Error('In order to persist your Apollo Link Queue, you need to pass in an underlying storage provider. ' +
                 'Please see https://github.com/SocialAutoTransport/apollo-link-queue-persist#storage-providers');
         }
+        var log = new Log(options);
         var queue = new Queue(options);
         var storage = new Storage(options);
-        var persistor = new Persistor({ queue: queue, storage: storage }, options);
+        var persistor = new Persistor({ log: log, queue: queue, storage: storage }, options);
+        this.log = log;
         this.queue = queue;
         this.storage = storage;
         this.persistor = persistor;
         QueueLink.addLinkQueueEventListener("any", "enqueue", function (item) {
-            console.log('QueuePersistor: mutation enqueued', item);
+            _this.log.info('QueueLink listener (any, enqueued) fired', item);
             _this.persistor.persist();
         });
         QueueLink.addLinkQueueEventListener("any", "dequeue", function (item) {
-            console.log('QueuePersistor: mutation dequeued', item);
+            _this.log.info('QueueLink listener (any, dequeue) fired', item);
             _this.persistor.persist();
         });
     }
@@ -36,6 +39,18 @@ var QueuePersistor = (function () {
     };
     QueuePersistor.prototype.purge = function () {
         return this.persistor.purge();
+    };
+    QueuePersistor.prototype.getLogs = function (print) {
+        if (print === void 0) { print = false; }
+        if (print) {
+            this.log.tailLogs();
+        }
+        else {
+            return this.log.getLogs();
+        }
+    };
+    QueuePersistor.prototype.getSize = function () {
+        return this.storage.getSize();
     };
     return QueuePersistor;
 }());
