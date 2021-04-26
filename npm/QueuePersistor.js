@@ -19,11 +19,11 @@ var QueuePersistor = (function () {
         this.queue = queue;
         this.storage = storage;
         this.persistor = persistor;
-        QueueLink.addLinkQueueEventListener("create_driveraction", "enqueue", function (item) {
+        QueueLink.addLinkQueueEventListener("any", "enqueue", function (item) {
             console.log('QueuePersistor: mutation enqueued', item);
             _this.persistor.persist();
         });
-        QueueLink.addLinkQueueEventListener("create_driveraction", "dequeue", function (item) {
+        QueueLink.addLinkQueueEventListener("any", "dequeue", function (item) {
             console.log('QueuePersistor: mutation dequeued', item);
             _this.persistor.persist();
         });

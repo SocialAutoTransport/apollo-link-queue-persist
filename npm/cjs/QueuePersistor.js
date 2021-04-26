@@ -21,11 +21,11 @@ var QueuePersistor = (function () {
         this.queue = queue;
         this.storage = storage;
         this.persistor = persistor;
-        apollo_link_queue_1.default.addLinkQueueEventListener("create_driveraction", "enqueue", function (item) {
+        apollo_link_queue_1.default.addLinkQueueEventListener("any", "enqueue", function (item) {
             console.log('QueuePersistor: mutation enqueued', item);
             _this.persistor.persist();
         });
-        apollo_link_queue_1.default.addLinkQueueEventListener("create_driveraction", "dequeue", function (item) {
+        apollo_link_queue_1.default.addLinkQueueEventListener("any", "dequeue", function (item) {
             console.log('QueuePersistor: mutation dequeued', item);
             _this.persistor.persist();
         });

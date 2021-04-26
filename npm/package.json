@@ -1,6 +1,6 @@
 {
   "name": "@SocialAutoTransport/apollo-link-queue-persist",
-  "version": "0.0.8",
+  "version": "0.0.10",
   "description": "Simple persistence for Apollo link queue instances",
   "author": "Rob Newton <robbienewton@gmail.com>",
   "contributors": [
@@ -22,7 +22,7 @@
     "registry": "https://npm.pkg.github.com/SocialAutoTransport"
   },
   "dependencies": {
-    "@SocialAutoTransport/apollo-link-queue": "^3.2.4"
+    "@SocialAutoTransport/apollo-link-queue": "^3.2.6"
   },
   "peerDependencies": {
     "@apollo/client": "^3.2.5"
