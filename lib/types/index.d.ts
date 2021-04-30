@@ -20,4 +20,6 @@ export interface ApolloPersistOptions<TSerialized> {
     maxSize?: number | false;
     debug?: boolean;
     client: ApolloClient<InMemoryCache>;
+    beforeRestore: any;
+    onCompleted: any;
 }

@@ -5,6 +5,8 @@ export default class Queue<T> {
     queueLink: QueueLink;
     serialize: boolean;
     client: ApolloClient<InMemoryCache>;
+    beforeRestore: any;
+    onCompleted: any;
     constructor(options: ApolloPersistOptions<T>);
     extract(): PersistedData<T>;
     restore(data: PersistedData<T>): void;

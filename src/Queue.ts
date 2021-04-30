@@ -7,26 +7,36 @@ export default class Queue<T> {
   queueLink: QueueLink;
   serialize: boolean;
   client: ApolloClient<InMemoryCache>;
+  beforeRestore: any;
+  onCompleted: any;
 
   constructor(options: ApolloPersistOptions<T>) {
-    const { queueLink, serialize = true, client } = options;
+    const { queueLink, serialize = true, client, beforeRestore, onCompleted } = options;
 
     this.queueLink = queueLink;
     this.serialize = serialize;
     this.client = client;
+    this.beforeRestore = beforeRestore;
+    this.onCompleted = onCompleted;
   }
   
   extract(): PersistedData<T> {
       let data: PersistedData<T> = '';
 
       // Convert each Operation to a GraphQLRequest so we aren't persisting functions
-      const entries = this.queueLink.getQueue().map((entry: OperationQueueEntry): GraphQLRequest => ({
-        query: entry.operation.query,
-        variables: entry.operation.variables,
-        operationName: entry.operation.operationName,
-        context: {},//entry.operation.getContext(),
-        extensions: entry.operation.extensions,
-      }));
+      const entries = this.queueLink.getQueue().map((entry: OperationQueueEntry): GraphQLRequest => {
+        let context = entry.operation.getContext();
+        //Exclude cache which prevents serialization
+        context.cache = undefined;
+        context.getCacheKey = undefined;
+        return {
+          query: entry.operation.query,
+          variables: entry.operation.variables,
+          operationName: entry.operation.operationName,
+          context: context,
+          extensions: entry.operation.extensions,
+        }
+      });
 
       if (this.serialize) {
         data = JSON.stringify(entries) as string;
@@ -46,11 +56,19 @@ export default class Queue<T> {
 
     if (parsedData != null) {
       parsedData.map(graphqlRequest => {
-        const { query, variables, context } = (graphqlRequest as unknown) as GraphQLRequest;
+        let workingGraphqlRequest = {...graphqlRequest};
+        try {
+          workingGraphqlRequest = this.beforeRestore(workingGraphqlRequest);
+        } catch (error) {}
+        const { query, variables, context } = (workingGraphqlRequest as unknown) as GraphQLRequest;
         if (this.queueLink.isType(query, 'mutation')) {
-          this.client.mutate({mutation: query, variables, context});
+          this.client.mutate({mutation: query, variables, context}).then(response => {
+            if (this.onCompleted) this.onCompleted(workingGraphqlRequest, response);
+          });
         } else {
-          this.client.query({query, variables, context});
+          this.client.query({query, variables, context}).then(response => {
+            if (this.onCompleted) this.onCompleted(workingGraphqlRequest, response);
+          });
         }
       });
     }
