@@ -29,4 +29,5 @@ export interface ApolloPersistOptions<TSerialized> {
   client: ApolloClient<InMemoryCache>;
   beforeRestore: any;
   onCompleted: any;
+  onError: any;
 }

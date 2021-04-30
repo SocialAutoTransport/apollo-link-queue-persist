@@ -37,6 +37,45 @@ await persistQueue({
 });
 ```
 
+### BeforeRestore()
+You can optionally pass a function to the `beforeRestore` option that will allow you to make a modification to the graphqlrequest that was queued just before it is restored. The function should accept the graphqlrequest object as a parameter and must return the modified copy of the request. Internally the restore function will then call client.mutate or client.query with the modified request object instead of the original which was queued.
+
+### OnCompleted()
+You can optionally pass a function to the `onCompleted` option that will be called after the persisted graphql request is restored and ran. The function should accept the graphqlrequest and response object. This allows for triggering business logic in your app after the requests are run emulating the same behavior of the onCompleted property of a useMutation or useQuery hook.
+
+```js
+await persistQueue({
+  queueLink,
+  storage: AsyncStorage,
+  client: apolloClient,
+  onCompleted: (request, response) => {
+    console.log('Called onCompleted()', request, response);
+    //Optional request specific handling
+    if (request.context.customProperty === 'some specific value') {
+      console.log('Do something specific based on that query or mutation running successfully');
+    }
+  }
+});
+```
+
+### OnError()
+You can optionally pass a function to the `onError` option that will be called if the persisted graphql request fails to run successfully. The function should accept the graphqlrequest and the error object.
+
+```js
+await persistQueue({
+  queueLink,
+  storage: AsyncStorage,
+  client: apolloClient,
+  onError: (request, error) => {
+    console.error('Called onError()', request, error);
+    //Optional request specific handling
+    if (request.context.customProperty === 'some specific value') {
+      console.error('Do something specific based on that query or mutation failing');
+    }
+  }
+});
+```
+
 ## Storage Providers
 
 `apollo-link-queue-persist` provides wrappers for the following storage providers, with no additional dependencies:

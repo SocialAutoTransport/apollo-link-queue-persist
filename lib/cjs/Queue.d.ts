@@ -7,6 +7,7 @@ export default class Queue<T> {
     client: ApolloClient<InMemoryCache>;
     beforeRestore: any;
     onCompleted: any;
+    onError: any;
     constructor(options: ApolloPersistOptions<T>);
     extract(): PersistedData<T>;
     restore(data: PersistedData<T>): void;

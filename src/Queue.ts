@@ -9,15 +9,17 @@ export default class Queue<T> {
   client: ApolloClient<InMemoryCache>;
   beforeRestore: any;
   onCompleted: any;
+  onError: any;
 
   constructor(options: ApolloPersistOptions<T>) {
-    const { queueLink, serialize = true, client, beforeRestore, onCompleted } = options;
+    const { queueLink, serialize = true, client, beforeRestore, onCompleted, onError} = options;
 
     this.queueLink = queueLink;
     this.serialize = serialize;
     this.client = client;
     this.beforeRestore = beforeRestore;
     this.onCompleted = onCompleted;
+    this.onError = onError;
   }
   
   extract(): PersistedData<T> {
@@ -62,12 +64,20 @@ export default class Queue<T> {
         } catch (error) {}
         const { query, variables, context } = (workingGraphqlRequest as unknown) as GraphQLRequest;
         if (this.queueLink.isType(query, 'mutation')) {
-          this.client.mutate({mutation: query, variables, context}).then(response => {
+          this.client.mutate({mutation: query, variables, context})
+          .then(response => {
             if (this.onCompleted) this.onCompleted(workingGraphqlRequest, response);
+          })
+          .catch(error => {
+            if (this.onError) this.onError(workingGraphqlRequest, error);
           });
         } else {
-          this.client.query({query, variables, context}).then(response => {
+          this.client.query({query, variables, context})
+          .then(response => {
             if (this.onCompleted) this.onCompleted(workingGraphqlRequest, response);
+          })
+          .catch(error => {
+            if (this.onError) this.onError(workingGraphqlRequest, error);
           });
         }
       });
